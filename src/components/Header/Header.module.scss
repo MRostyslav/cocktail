@@ -1,0 +1,28 @@
+.header {
+    height: 120px;
+    background-color: #0ab0b6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 25px;
+
+    .logo{
+        width: 25%;
+        max-width: 60px;
+        cursor: pointer;
+        img{
+            width: 100%;
+        }
+    }
+    .nav {
+        display: flex;
+        &__link{
+            font-size: 20px;
+            text-decoration: none;
+            color: #313030;
+            &:not(:last-of-type){
+                margin-right: 15px;
+            }
+        }
+    }
+}
