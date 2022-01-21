@@ -1,0 +1,17 @@
+.home{
+    .title{
+        font-size: 26px;
+        text-transform: uppercase;
+    }
+    .description{
+        margin: 25px 0 0;
+        font-size: 18px;
+    }
+    .details {
+        margin: 50px 0 0;
+
+        .details__text{
+            margin: 20px 0;
+        }
+    }
+}

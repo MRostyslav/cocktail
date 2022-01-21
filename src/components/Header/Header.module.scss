@@ -4,7 +4,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 25px;
+    padding: 10px 15%;
 
     .logo{
         width: 25%;
@@ -21,7 +21,7 @@
             text-decoration: none;
             color: #313030;
             &:not(:last-of-type){
-                margin-right: 15px;
+                margin-right: 40px;
             }
         }
     }
