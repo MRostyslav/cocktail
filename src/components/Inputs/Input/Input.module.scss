@@ -1,0 +1,16 @@
+.inputBlock{
+    width: 100%;
+    input {
+        width: 100%;
+        display: block;
+        box-sizing: border-box;
+        outline: none;
+        border: 1px #0ab0b6 solid;
+        border-radius: 8px;
+        padding: 15px;
+        font-size: 18px;
+        &:focus{
+            border: 1px #0e8e92 solid;
+        }
+    }
+}
