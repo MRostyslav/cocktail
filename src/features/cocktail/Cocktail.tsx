@@ -5,9 +5,9 @@ import { Icocktail } from '../../app/interfaces/Icocktails';
 
 import { IngridientChips } from '../../components/Chips';
 
-export default function Cocktail({ cocktailData }: { cocktailData: Icocktail }) {
+export default function Cocktail({ cocktailData, onClick }: { cocktailData: Icocktail, onClick: () => void }) {
     return (
-        <div className={styles.cocktail} style={{ backgroundImage: `url(${cocktailData?.strDrinkThumb})` }}>
+        <div className={styles.cocktail} style={{ backgroundImage: `url(${cocktailData?.strDrinkThumb})` }} onClick={onClick}>
             <div className={styles.cocktail__header}>
                 <h4 className={styles.header__title}>{cocktailData?.strDrink}</h4>
                 <h3 className={styles.header__subtitle}>{cocktailData?.strDrinkAlternate}</h3>
