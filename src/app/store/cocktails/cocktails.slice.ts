@@ -1,24 +1,62 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState, AppThunk } from '../../../app/store';
-import { getRandomCocktail } from '../../../services/CoctailsApi';
+import { getCocktailsByName, getRandomCocktail, getCocktail, getFilterList } from '../../../services/CoctailsApi';
 import { Icocktail } from '../../interfaces/Icocktails';
 
 export interface CocktailsState {
     randomCocktail?: Icocktail;
+    cocktails: Icocktail[];
+    cocktailView?: Icocktail;
+    categoryList: string[];
+    ingredientsList: string[],
+    glassesList: string[],
+    alcoholicList: string[],
     status: 'idle' | 'loading' | 'failed';
 }
 
 const initialState: CocktailsState = {
     randomCocktail: undefined,
+    cocktails: [],
+    cocktailView: undefined,
+    categoryList: [],
+    ingredientsList: [],
+    glassesList: [],
+    alcoholicList: [],
     status: 'idle',
-
 };
+
+export enum Filter {
+    categories = 'c',
+    glasses = 'g',
+    ingredients = 'i',
+    alcoholic = 'a',
+}
 
 export const fetchRandomCocktail = createAsyncThunk(
     'cocktails/fetchRandomCocktail',
     async () => {
         const response: Icocktail = await getRandomCocktail();
-        // The value we return becomes the `fulfilled` action payload
+        return response;
+    }
+);
+export const searchCocktailsByName = createAsyncThunk(
+    'cocktails/searchCocktailsByName',
+    async (val: string) => {
+        const response: Icocktail[] = await getCocktailsByName(val);
+        return response;
+    }
+);
+export const fetchCocktail = createAsyncThunk(
+    'cocktails/fetchCocktail',
+    async (id: string) => {
+        const response: Icocktail = await getCocktail(id);
+        return response;
+    }
+);
+export const fetchFilterList = createAsyncThunk(
+    'cocktails/fetchFilterList',
+    async (id: Filter) => {
+        const response = await getFilterList(id);
         return response;
     }
 );
@@ -43,7 +81,39 @@ export const cocktailsSlice = createSlice({
             .addCase(fetchRandomCocktail.fulfilled, (state, action) => {
                 state.status = 'idle';
                 state.randomCocktail = action.payload;
-            });
+            })
+
+            .addCase(searchCocktailsByName.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(searchCocktailsByName.fulfilled, (state, action) => {
+                state.status = 'idle';
+                state.cocktails = action.payload;
+            })
+
+            .addCase(fetchFilterList.pending, (state) => {
+                state.status = 'loading';
+            })
+        // .addCase(fetchFilterList.fulfilled, (state, action) => {
+        //     state.status = 'idle';
+        //     console.log(action.payload);
+        //     // const filterList: [] =
+        //     console.log(
+        //         action.payload.map(item => item.strCategory)
+        //     );
+
+        //     if (action.meta.arg === Filter.alcoholic)
+        //         console.log(action.payload);
+        //     if (action.meta.arg === Filter.categories)
+        //         console.log(action.payload);
+        //     if (action.meta.arg === Filter.glasses)
+        //         console.log(action.payload);
+        //     if (action.meta.arg === Filter.ingredients)
+        //         console.log(action.payload);
+
+
+        //     // state.cocktailView = action.payload;
+        // });
     },
 });
 

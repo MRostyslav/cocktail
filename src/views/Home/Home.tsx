@@ -17,7 +17,7 @@ export default function Home() {
 
     const goToSearch = (): void => navigate('/search');
     const fetchCocktail = () => dispatch(fetchRandomCocktail());
-
+    const openCocktailView = (id: string) => navigate(`/cocktail/${id}`);
 
     useEffect(() => {
         fetchCocktail();
@@ -33,7 +33,7 @@ export default function Home() {
             <p className={styles.details__text}>You can click 'search' and find somthing what you like</p>
             <PrimaryBtn text={'Search'} action={goToSearch}></PrimaryBtn>
             <p className={styles.details__text}>or try this cocktail</p>
-            <Cocktail cocktailData={randomCocktail}></Cocktail>
+            <Cocktail cocktailData={randomCocktail} onClick={() => openCocktailView(randomCocktail.idDrink)}></Cocktail>
         </div>
     </div>;
 }

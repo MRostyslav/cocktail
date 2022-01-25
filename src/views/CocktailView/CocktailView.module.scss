@@ -1,0 +1,52 @@
+.view{
+    display: flex;
+    flex-direction: column;
+    .view__head{
+        width: 100%;
+        .title{
+            font-size: 28px;
+            font-weight: bold;    
+        }
+        .updated{
+            font-size: 14px;
+            margin:5px 0 25px;
+            display: block;
+        }
+    }
+    .view__body{
+        display: flex;
+        flex-wrap: wrap;
+        .left{
+            width: 45%;
+            margin-right: 5%;
+            .thumb{
+                width: 100%;
+                img{
+                    width: 100%;
+                    display: block;
+                }
+            }
+        }
+        .right{
+            width: 50%;
+            
+            table {
+                width: 100%;
+                margin-bottom: 0px;
+                thead{
+                    th{
+                        padding-bottom: 10px;
+                        text-align: left;
+                        width: 50%;
+                        font-weight: bold;
+                    }
+                }
+                tbody{
+                    td{
+                        padding: 3px 0;
+                    }
+                }
+            }
+        }
+    }
+}
