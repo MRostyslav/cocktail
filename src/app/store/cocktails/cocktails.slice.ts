@@ -91,6 +91,14 @@ export const cocktailsSlice = createSlice({
                 state.cocktails = action.payload;
             })
 
+            .addCase(fetchCocktail.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(fetchCocktail.fulfilled, (state, action) => {
+                state.status = 'idle';
+                state.cocktailView = action.payload;
+            })
+
             .addCase(fetchFilterList.pending, (state) => {
                 state.status = 'loading';
             })
@@ -112,7 +120,6 @@ export const cocktailsSlice = createSlice({
         //         console.log(action.payload);
 
 
-        //     // state.cocktailView = action.payload;
         // });
     },
 });
