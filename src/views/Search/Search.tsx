@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styles from './Search.module.scss';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { searchCocktailsByName, fetchFilterList, Filter, searchCocktailsByFilter } from '../../app/store/cocktails/cocktails.slice';
+import { searchCocktailsByName, fetchFilterList, Filter, searchCocktailsByFilter, clearCocktails } from '../../app/store/cocktails/cocktails.slice';
 import { Icocktail } from '../../app/interfaces/Icocktails';
 
 import { Input, Select } from '../../components/Inputs';
@@ -23,15 +23,23 @@ export default function Search() {
         dispatch(fetchFilterList(Filter.alcoholic));
         dispatch(fetchFilterList(Filter.glasses));
         dispatch(fetchFilterList(Filter.ingredients));
+
+        return () => resetSearch();
     }, []);
 
-
     const searchByName = () => dispatch(searchCocktailsByName(serchValue));
-    const searchByFilter = (id: Filter, val: string) => dispatch(searchCocktailsByFilter({ id, val }));
+    const searchByFilter = (id: Filter, val: string) => {
+        setSerchValue(val);
+        dispatch(searchCocktailsByFilter({ id, val }))
+    }
+    const resetSearch = () => {
+        setSerchValue('');
+        dispatch(clearCocktails());
+    }
     const openCocktailView = (id: string) => navigate(`/cocktail/${id}`);
 
     return <div className={styles.search}>
-        <div className={styles.search__actions}>
+        {cocktails.length == 0 && <div className={styles.search__actions}>
             <Input value={serchValue} onChange={(val: string): void => setSerchValue(val)} onSubmit={searchByName}></Input>
             <div className={styles.search__filters}>
                 <Select selectList={categories} onSelect={(val: string) => searchByFilter(Filter.categories, val)} ></Select>
@@ -39,10 +47,14 @@ export default function Search() {
                 <Select selectList={glasses} onSelect={(val: string) => searchByFilter(Filter.glasses, val)} ></Select>
                 <Select selectList={ingredients} onSelect={(val: string) => searchByFilter(Filter.ingredients, val)} ></Select>
             </div>
-        </div>
+        </div>}
+        {cocktails.length > 0 && < div >
+            <h3>Searched {serchValue}</h3>
+            <button onClick={() => resetSearch()}>Close</button>
+        </div>}
 
         <div className={styles.cocktails}>
             {cocktails.map((cocktail: Icocktail) => <Cocktail key={cocktail.idDrink} onClick={() => openCocktailView(cocktail.idDrink)} cocktailData={cocktail}></Cocktail>)}
         </div>
-    </div>;
+    </div >;
 }
