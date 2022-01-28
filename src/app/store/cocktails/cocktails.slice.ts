@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState, AppThunk } from '../../../app/store';
-import { getCocktailsByName, getRandomCocktail, getCocktail, getFilterList } from '../../../services/CoctailsApi';
+import { getCocktailsByName, getRandomCocktail, getCocktail, getFilterList, getFilteredCocktails } from '../../../services/CoctailsApi';
 import { Icocktail } from '../../interfaces/Icocktails';
 
 export interface CocktailsState {
@@ -60,18 +60,21 @@ export const fetchFilterList = createAsyncThunk(
         return response;
     }
 );
+export const searchCocktailsByFilter = createAsyncThunk(
+    'cocktails/searchCocktailsByFilter',
+    async ({ id, val }: { id: Filter, val: string }) => {
+        const response: Icocktail[] = await getFilteredCocktails(id, val);
+        return response;
+    }
+);
 
 export const cocktailsSlice = createSlice({
     name: 'cocktails',
     initialState,
     reducers: {
-        // increment: (state) => {
-        //     // Redux Toolkit allows us to write "mutating" logic in reducers. It
-        //     // doesn't actually mutate the state because it uses the Immer library,
-        //     // which detects changes to a "draft state" and produces a brand new
-        //     // immutable state based off those changes
-        //     state.value += 1;
-        // },
+        clearCocktails: (state) => {
+            state.cocktails = [];
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -102,29 +105,29 @@ export const cocktailsSlice = createSlice({
             .addCase(fetchFilterList.pending, (state) => {
                 state.status = 'loading';
             })
-        // .addCase(fetchFilterList.fulfilled, (state, action) => {
-        //     state.status = 'idle';
-        //     console.log(action.payload);
-        //     // const filterList: [] =
-        //     console.log(
-        //         action.payload.map(item => item.strCategory)
-        //     );
+            .addCase(fetchFilterList.fulfilled, (state, action) => {
+                state.status = 'idle';
+                if (action.meta.arg === Filter.alcoholic)
+                    state.alcoholicList = action.payload;
+                if (action.meta.arg === Filter.categories)
+                    state.categoryList = action.payload;
+                if (action.meta.arg === Filter.glasses)
+                    state.glassesList = action.payload;
+                if (action.meta.arg === Filter.ingredients)
+                    state.ingredientsList = action.payload;
+            })
 
-        //     if (action.meta.arg === Filter.alcoholic)
-        //         console.log(action.payload);
-        //     if (action.meta.arg === Filter.categories)
-        //         console.log(action.payload);
-        //     if (action.meta.arg === Filter.glasses)
-        //         console.log(action.payload);
-        //     if (action.meta.arg === Filter.ingredients)
-        //         console.log(action.payload);
-
-
-        // });
+            .addCase(searchCocktailsByFilter.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(searchCocktailsByFilter.fulfilled, (state, action) => {
+                state.status = 'idle';
+                state.cocktails = action.payload;
+            });
     },
 });
 
-// export const { increment } = cocktailsSlice.actions;
+export const { clearCocktails } = cocktailsSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of
